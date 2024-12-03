@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: api-gateway
+  name: api-gateway
+  namespace: microservices
+spec:
+  ports:
+  - name: http
+    port: 8083
+    targetPort: 8083
+  selector:
+    app: api-gateway
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api-gateway
+  name: api-gateway
+  namespace: microservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - env:
+        - name: SERVER_PORT
+          value: "8083"
+        - name: SERVER_HOST
+          value: 0.0.0.0
+        - name: PRODUCT_SERVICE_URL
+          value: http://product-service:8081
+        - name: ORDER_SERVICE_URL
+          value: http://order-service:8082
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              key: ENVIRONMENT
+              name: microservices-config
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: LOG_LEVEL
+              name: microservices-config
+        image: groupthreesix.azurecr.io/api-gateway:568451a
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8083
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: api-gateway
+        ports:
+        - containerPort: 8083
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8083
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
