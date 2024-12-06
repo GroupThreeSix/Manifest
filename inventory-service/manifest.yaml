@@ -47,7 +47,7 @@ spec:
             configMapKeyRef:
               key: LOG_LEVEL
               name: microservices-config
-        image: groupthreesix.azurecr.io/inventory-service:568451a
+        image: groupthreesix.azurecr.io/inventory-service:d548a52
         imagePullPolicy: Always
         livenessProbe:
           initialDelaySeconds: 15

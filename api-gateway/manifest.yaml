@@ -51,7 +51,7 @@ spec:
             configMapKeyRef:
               key: LOG_LEVEL
               name: microservices-config
-        image: groupthreesix.azurecr.io/api-gateway:568451a
+        image: groupthreesix.azurecr.io/api-gateway:d548a52
         imagePullPolicy: Always
         livenessProbe:
           httpGet:

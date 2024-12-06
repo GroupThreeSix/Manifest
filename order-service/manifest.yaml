@@ -47,7 +47,7 @@ spec:
             configMapKeyRef:
               key: LOG_LEVEL
               name: microservices-config
-        image: groupthreesix.azurecr.io/order-service:568451a
+        image: groupthreesix.azurecr.io/order-service:d548a52
         livenessProbe:
           httpGet:
             path: /health
